@@ -21,7 +21,16 @@ var Product = function(name, endOfFile){
     allProducts.push(this);
 }
 
-function fillLocalStorageArray(){
+function firstProductInstantiation() {
+    if (localStorage.lsproducts) {
+        var LSproducts = localStorage.getItem('lsproducts');
+        var parsedProducts = JSON.parse(LSproducts);
+        console.log('parsed products', parsedProducts);
+        for(var i=0; i<parsedProducts.length; i++){
+            new Product(parsedProducts[i].alt, parsedProducts[i].filePath, parsedProducts[i].vote, parsedProducts[i].views);
+        }
+
+    } else {
     new Product('bag', 'jpg');
     new Product('banana', 'jpg');
     new Product('bathroom', 'jpg');
@@ -42,6 +51,7 @@ function fillLocalStorageArray(){
     new Product('shark', 'jpg');
     new Product('sweep', 'png')
     new Product('scissors', 'jpg');
+}
 }
 
 
@@ -103,6 +113,8 @@ function getUniqueRandomNumbers(){
             generateChartData();
             generateChart();
             createResultButton();
+
+            productsToLS();
         }
     }
 
@@ -113,6 +125,11 @@ function createResultButton() {
   resultsButton.textContent = 'View Results';
   buttonContainer.appendChild(resultsButton);
   resultsButton.addEventListener('click', displayResults);
+}
+
+function productsToLS() {
+    var stringifiedProducts = JSON.stringify(products);
+    localStorage.setItem('lsproducts', stringifiedProducts);
 }
 
 function displayResults() {
@@ -175,9 +192,21 @@ function displayResults() {
                     'rgba(255, 206, 86, 0.2)',
                     'rgba(75, 192, 192, 0.2)',
                     'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
                     'rgba(255, 159, 64, 0.2)'
                 ],
                 borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
                     'rgba(255, 99, 132, 1)',
                     'rgba(54, 162, 235, 1)',
                     'rgba(255, 206, 86, 1)',
@@ -196,6 +225,12 @@ function displayResults() {
                         'rgba(255, 206, 86, 0.2)',
                         'rgba(75, 192, 192, 0.2)',
                         'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)'
                     ],
                     borderColor: [
@@ -204,7 +239,13 @@ function displayResults() {
                         'rgba(255, 206, 86, 1)',
                         'rgba(75, 192, 192, 1)',
                         'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
                     ],
                     borderWidth: 1
                 }
@@ -222,32 +263,5 @@ function displayResults() {
     });
 }
 
-function initialLS(){
-    if(localStorage.length === 0){
-        fillLocalStorageArray();
-    } else {
-        getAllProducts();
-    }
-}
-
-function allProductsIntoLS(){
-    var stringifiedProducts = JSON.stringify(allProducts);
-    localStorage.setItem('products', stringifiedProducts);
-}
-
-function getAllProducts(){
-    var allProductsFromLS = localStorage.getItem('products');
-    var parsedProducts = JSON.parse(allProductsFromLS);
-    generateNewProducts(parsedProducts);
-}
-
-function generateNewProducts(products){
-    allProducts = [];
-    for(var i=0; i<products.length; i++){
-        new Product(products[i].filePath, products[i].title, products[i].vote, products[i].views);
-    }
-}
-
-initialLS();
-allProductsIntoLS();
+firstProductInstantiation();
 render();
